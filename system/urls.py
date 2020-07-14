@@ -5,5 +5,6 @@ from system import views
 urlpatterns = [
     path('news/', views.news_list, name='news_list'),
     path('news/<int:pk>/', views.news_detail, name='news_detail'),
+    path('verify/code/', views.verify_code, name='verify_code'),
 
 ]

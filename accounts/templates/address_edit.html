@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>手机注册</title>
+    <title>编辑地址</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta
@@ -17,78 +17,78 @@
     <!--主体-->
     <header class="wy-header">
       <div class="wy-header-icon-back"><span></span></div>
-      <div class="wy-header-title">手机注册</div>
+      <div class="wy-header-title">编辑地址</div>
     </header>
     <div class="weui-content">
       <div class="weui-cells weui-cells_form wy-address-edit">
-        <div class="weui-cell weui-cell_vcode">
+        <div class="weui-cell">
+          <div class="weui-cell__hd">
+            <label class="weui-label wy-lab">收货人</label>
+          </div>
+          <div class="weui-cell__bd">
+            <input
+              class="weui-input"
+              type="text"
+              placeholder="张三"
+            />
+          </div>
+        </div>
+        <div class="weui-cell">
           <div class="weui-cell__hd">
             <label class="weui-label wy-lab">手机号</label>
           </div>
           <div class="weui-cell__bd">
-            <input class="weui-input" type="tel" placeholder="请输入手机号" />
-          </div>
-          <div class="weui-cell__ft">
-            <button class="weui-vcode-btn">获取验证码</button>
-          </div>
-        </div>
-        <div class="weui-cell weui-cell_vcode">
-          <div class="weui-cell__hd">
-            <label class="weui-label wy-lab">验证码</label>
-          </div>
-          <div class="weui-cell__bd">
-            <input
-              class="weui-input"
-              type="number"
-              placeholder="请输入验证码"
-            />
-          </div>
-          <div class="weui-cell__ft">
-            <img class="weui-vcode-img" src="./images/vcode.jpg" />
-          </div>
-        </div>
-        <div class="weui-cell">
-          <div class="weui-cell__hd">
-            <label class="weui-label wy-lab">设置密码</label>
-          </div>
-          <div class="weui-cell__bd">
             <input
               class="weui-input"
               type="number"
               pattern="[0-9]*"
-              placeholder="请输入新密码"
+              placeholder="13011112222"
             />
           </div>
         </div>
         <div class="weui-cell">
           <div class="weui-cell__hd">
-            <label class="weui-label wy-lab">确认密码</label>
+            <label for="name" class="weui-label wy-lab">所在地区</label>
           </div>
           <div class="weui-cell__bd">
             <input
               class="weui-input"
-              type="number"
-              pattern="[0-9]*"
-              placeholder="请再次输入新密码"
+              id="address"
+              type="text"
+              value="广东省 广州市 天河区"
+              readonly=""
+              data-code="420106"
+              data-codes="420000,420100,420106"
             />
+          </div>
+        </div>
+        <div class="weui-cell">
+          <div class="weui-cell__hd">
+            <label class="weui-label wy-lab">详细地址</label>
+          </div>
+          <div class="weui-cell__bd">
+            <textarea
+              class="weui-textarea"
+              placeholder="珠江新城珠江大厦8楼"
+            ></textarea>
+          </div>
+        </div>
+        <div class="weui-cell weui-cell_switch">
+          <div class="weui-cell__bd">设为默认地址</div>
+          <div class="weui-cell__ft">
+            <input class="weui-switch" type="checkbox" />
           </div>
         </div>
       </div>
-      <label for="weuiAgree" class="weui-agree">
-        <input
-          id="weuiAgree"
-          type="checkbox"
-          class="weui-agree__checkbox"
-          checked="checked"
-        />
-        <span class="weui-agree__text"
-          >阅读并同意<a href="javascript:void(0);">《注册协议》</a></span
-        >
-      </label>
       <div class="weui-btn-area">
-        <a href="javascript:;" class="weui-btn weui-btn_warn">注册并登陆</a>
+        <a
+          class="weui-btn weui-btn_primary"
+          href="javascript:"
+          id="showTooltips"
+          >保存此地址</a
+        >
+        <a href="javascript:;" class="weui-btn weui-btn_warn">删除此地址</a>
       </div>
-      <div class="weui-cells__tips t-c font-12">登陆账号为您输入的手机号码</div>
     </div>
 
     <script src="lib/jquery-2.1.4.js"></script>
@@ -101,5 +101,14 @@
     </script>
 
     <script src="js/jquery-weui.js"></script>
+    <script src="js/city-picker.js"></script>
+    <script>
+      $('#address').cityPicker({
+        title: '选择出发地',
+        onChange: function(picker, values, displayValues) {
+          console.log(values, displayValues);
+        }
+      });
+    </script>
   </body>
 </html>

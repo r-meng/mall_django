@@ -1,4 +1,6 @@
 
+# 登录后存储在session中的用户ID
+LOGIN_SESSION_ID = 'user_id'
 
 # 系统模块 - 轮播图配置
 SLIDER_TYPE_INDEX = 11

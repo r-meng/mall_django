@@ -23,5 +23,6 @@ urlpatterns = [
     path('', views.index, name='index'),
 
     path('mall/', include(('mall.urls', 'mall_django'), namespace='mall')),
+    path('accounts/', include(('accounts.urls', 'mall_django'), namespace='accounts')),
     path('sys/', include(('system.urls', 'mall_django'), namespace='system')),
 ]
