@@ -9,3 +9,5 @@ venv/
 *.sqlite3
 **/__init__.py
 **/migrations
+**/.jpg
+medias/

@@ -9,5 +9,8 @@ urlpatterns = [
     path('user/address/list/', views.address_list, name='address_list'),
     # 新增和修改
     # user/address/edit/add      user/address/edit/12
-    re_path('user/address/edit/(?P<pk>\S+)?$', views.address_edit, name='address_edit'),
+    re_path(r'^user/address/edit/(?P<pk>\S+)/$', views.address_edit, name='address_edit'),
+    path(r'^user/address/delete/<int:pk>/', views.address_delete, name='address_delete'),
+
+
 ]

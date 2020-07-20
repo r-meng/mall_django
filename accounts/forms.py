@@ -110,19 +110,52 @@ class UserRegistForm(forms.Form):
 
 class UserAddressForm(forms.ModelForm):
 
+    region = forms.CharField(label='大区域选项', max_length=64, required=True,
+                             error_messages={
+                                 'required': '请选择地址'
+                             })
+
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+
     class Meta:
         model = UserAddress
-        fields = ['']
+        fields = ['address', 'username', 'phone', 'is_default']
+        widgets = {
+            'is_default': forms.CheckboxInput(attrs={
+                'class': 'weui-switch'
+            })
+        }
 
-    province = models.CharField('省份', max_length=32)
-    city = models.CharField('市区', max_length=32)
-    area = models.CharField('区域', max_length=32)
-    town = models.CharField('街道', max_length=32, null=True, blank=True)
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        pattern = r'^0{0,1}1[0-9]{10}$'
+        if not re.search(pattern, phone):
+            raise forms.ValidationError('请输入正确的手机号码')
+        return phone
 
-    address = models.CharField('详细地址', max_length=64)
-    username = models.CharField('收件人', max_length=32)
-    phone = models.CharField('收件人电话', max_length=32)
+    def clean(self):
+        cleaned_data = super().clean()
+        addr_list = UserAddress.objects.filter(is_valid=True, user=self.request.user)
+        if addr_list.count() >= 20:
+            raise forms.ValidationError('最多只能添加20个地址')
+        return cleaned_data
 
-    is_default = models.BooleanField('是否为默认地址', default=False)
+    def save(self, commit=True):
+        obj = super().save(commit=False)
+        region = self.cleaned_data['region']
+        (province, city, area) = region.split(' ')
+        obj.province = province
+        obj.city = city
+        obj.area = area
+        obj.user = self.request.user
+
+        # 修改时，如果已经有默认地址，当前也勾选了默认地址选项，需要把之前的地址都改为非默认地址
+        if self.cleaned_data['is_default']:
+            UserAddress.objects.filter(is_valid=True, user=self.request.user, is_default=True).update(is_default=False)
+        obj.save()
+
+
 
 
