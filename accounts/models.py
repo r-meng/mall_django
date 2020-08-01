@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
 
 class User(AbstractUser):
     # username = models.CharField('用户名', max_length=64)
@@ -13,6 +12,23 @@ class User(AbstractUser):
 
     class Meta:
         db_table = 'accounts_user'
+        verbose_name = '用户基础信息'
+        verbose_name_plural = '用户基础信息'
+
+    @property
+    def default_addr(self):
+        addr = None
+        user_list = self.user_address.filter(is_valid=True)
+        # 1.找到默认地址
+        try:
+            addr = user_list.filter(is_default=True)[0]
+        except IndexError:
+            try:
+                addr = user_list[0]
+                # 2.如果没有默认地址，显示所有地址的第一个
+            except IndexError:
+                pass
+        return addr
 
 
 class UserProfile(models.Model):
@@ -34,6 +50,8 @@ class UserProfile(models.Model):
 
     class Meta:
         db_table = 'accounts_user_profile'
+        verbose_name = '用户详细信息'
+        verbose_name_plural = '用户详细信息'
 
 
 class UserAddress(models.Model):
@@ -55,6 +73,8 @@ class UserAddress(models.Model):
 
     class Meta:
         db_table = 'accounts_user_address'
+        verbose_name = '用户地址'
+        verbose_name_plural = '用户地址'
         ordering = ['is_default', '-updated_at']
 
     def get_phone_format(self):
@@ -62,6 +82,9 @@ class UserAddress(models.Model):
 
     def get_region_format(self):
         return '{self.province} {self.city} {self.area}'.format(self=self)
+
+    def __str__(self):
+        return self.get_region_format() + self.address
 
 
 class LoginRecord(models.Model):
@@ -75,3 +98,5 @@ class LoginRecord(models.Model):
 
     class Meta:
         db_table = 'accounts_login_record'
+        verbose_name = '登录历史'
+        verbose_name_plural = '登录历史'

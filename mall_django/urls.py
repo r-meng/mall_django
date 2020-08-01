@@ -20,11 +20,20 @@ from django.urls import path, include
 
 from mall_django import views
 
+import xadmin
+xadmin.autodiscover()
+
+from xadmin.plugins import xversion
+xversion.register_models()
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('xadmin/', xadmin.site.urls),
     path('', views.index, name='index'),
 
     path('mall/', include(('mall.urls', 'mall_django'), namespace='mall')),
     path('accounts/', include(('accounts.urls', 'mall_django'), namespace='accounts')),
     path('sys/', include(('system.urls', 'mall_django'), namespace='system')),
+    path('m/', include(('mine.urls', 'mall_django'), namespace='mine')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

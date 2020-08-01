@@ -30,12 +30,18 @@ class Order(models.Model):
 
     class Meta:
         db_table = 'mine_order'
+        verbose_name = '订单管理'
+        verbose_name_plural = '订单管理'
+
+    def get_cart_products(self):
+        """购物车中 已下单的商品"""
+        return self.carts.exclude(status=constants.ORDER_STATUS_INIT)
 
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, verbose_name='订单')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, related_name='carts', verbose_name='订单')
 
     name = models.CharField('商品名称', max_length=128)
     img = models.ImageField('商品主图')
@@ -54,6 +60,8 @@ class Cart(models.Model):
 
     class Meta:
         db_table = 'mine_cart'
+        verbose_name = '购物车'
+        verbose_name_plural = '购物车'
 
 
 class Comments(models.Model):
@@ -76,5 +84,6 @@ class Comments(models.Model):
 
     class Meta:
         db_table = 'mine_product_comments'
-
+        verbose_name = '商品评价'
+        verbose_name_plural = '商品评价'
 

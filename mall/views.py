@@ -1,5 +1,5 @@
 from django.db.models import Q
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 
 # Create your views here.
@@ -25,15 +25,42 @@ def product_list(request, template_name='product_list.html'):
 
 
 def product_detail(request, pk, template_name='product_detail.html'):
-    return render(request, template_name)
+    prod_obj = get_object_or_404(Product, uid=pk, is_valid=True)
+    # 用户默认地址
+    user = request.user
+    default_addr = None
+    if user.is_authenticated:
+        default_addr = user.default_addr
+    return render(request, template_name ,{
+        'prod_obj': prod_obj,
+        'default_addr': default_addr
+    })
+
 
 class ProductList(ListView):
-    paginate_by = 5
+    paginate_by = 6
     template_name = 'product_list.html'
 
     def get_queryset(self):
         query = Q(status=constants.PRODUCT_STATUS_SELL, is_valid=True)
+        # 按名称进行搜索
         name = self.request.GET.get('name', '')
         if name:
             query = query & Q(name__icontains=name)
-        return Product.objects.filter
+
+        # 按标签进行搜索
+        tag = self.request.GET.get('tag', '')
+        if tag:
+            query = query & Q(tags__code=tag)
+
+        # 按分类进行搜索
+        cls = self.request.GET.get('cls', '')
+        if cls:
+            query = query & Q(classes__code=cls)
+        return Product.objects.filter(query)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['search_name'] = self.request.GET.get('name', '')
+        context['params'] = self.request.GET.dict()
+        return context
