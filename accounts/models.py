@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models import F
 
 
 class User(AbstractUser):
@@ -29,6 +30,20 @@ class User(AbstractUser):
             except IndexError:
                 pass
         return addr
+
+    def ope_points_account(self, types, count):
+        """积分操作"""
+        if types == 1:
+            # 充值
+            self.points = F('points') + abs(count)
+        else:
+            # 消费
+            self.points = F('points') - abs(count)
+        self.save()
+        self.refresh_from_db()
+
+    def __str__(self):
+        return self.username
 
 
 class UserProfile(models.Model):

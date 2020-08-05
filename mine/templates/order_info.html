@@ -9,7 +9,8 @@
         <div class="wy-header-icon-back"><span></span></div>
         <div class="wy-header-title">订单详情</div>
     </header>
-    <form class="weui-content" method="post">
+    <form class="weui-content" method="post" action="{% url 'mine:order_pay' %}">
+        <input type="hidden" name="sn" value="{{ object.sn }}">
         <div class="wy-media-box weui-media-box_text address-select">
             <div class="weui-media-box_appmsg">
                 <div class="weui-media-box__hd proinfo-txt-l" style="width:20px;">
@@ -36,7 +37,7 @@
         <div class="wy-media-box weui-media-box_text">
             <div class="weui-media-box__bd">
                 {% for item in object.get_cart_products %}
-                {% with product=object.product %}
+                {% with product=item.product %}
                     <div class="weui-media-box_appmsg ord-pro-list">
                         <div class="weui-media-box__hd">
                             <a href="{% url 'mall:product_detail' product.uid %}">
@@ -54,10 +55,10 @@
 {#                            </p>#}
                             <div class="clear mg-t-10">
                                 <div class="wy-pro-pri fl">
-                                    ¥<em class="num font-15">{{ product.amount }}</em>
+                                    ¥<em class="num font-15">{{ item.amount }}</em>
                                 </div>
                                 <div class="pro-amount fr">
-                                    <span class="font-13">数量×<em class="name">{{ product.count }}</em></span>
+                                    <span class="font-13">数量×<em class="name">{{ item.count }}</em></span>
                                 </div>
                             </div>
                         </div>
@@ -114,9 +115,15 @@
             <div class="mg10-0 t-c">
                 总金额：<span class="wy-pro-pri mg-tb-5">¥<em class="num font-20">{{ object.buy_amount }}</em></span>
             </div>
-            <div class="mg10-0">
-                <input class="weui-btn weui-btn_primary" type="submit">积分支付</input>
-            </div>
+            {% if object.status == constants.ORDER_STATUS_PAID %}
+                <div class="mg10-0">
+                    <div class="weui-btn weui-btn_primary">您已支付</div>
+                </div>
+            {% else %}
+                <div class="mg10-0">
+                    <input class="weui-btn weui-btn_primary" type="submit">积分支付</input>
+                </div>
+            {% endif %}
         </div>
     </form>
 {% endblock %}

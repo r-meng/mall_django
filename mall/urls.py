@@ -11,5 +11,8 @@ urlpatterns = [
     path('prod/load/list/', views.ProductList.as_view(
         template_name='product_load_list.html'
     ), name='product_load_list'),
+    # 商品详情
     re_path(r'^prod/detail/(?P<pk>\S+)/$', views.product_detail, name='product_detail'),
+    # 商品分类
+    path('prod/classify/', views.prod_classify, name='prod_classify'),
 ]
