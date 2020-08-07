@@ -10,6 +10,7 @@
         <div class="wy-header-title">手机注册</div>
     </header>
     <form class="weui-content" method="post" action=".">
+        {% csrf_token %}
         <div class="weui-cells weui-cells_form wy-address-edit">
             <div class="weui-cell weui-cell_vcode">
                 <div class="weui-cell__hd">
